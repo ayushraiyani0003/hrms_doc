@@ -49,3 +49,4 @@ coverage/
 
 # --- Optional: OS files ----------------------------------
 Thumbs.db
+.history
