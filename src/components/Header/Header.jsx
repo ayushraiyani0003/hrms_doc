@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, Sun, Moon, ChevronRight, FileText, Users, Settings, Book, Briefcase, Calendar } from 'lucide-react';
+import { Search, Sun, Moon, ChevronRight } from 'lucide-react';
 
-const Header = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+const Header = ({ isDarkMode, toggleDarkMode }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -12,7 +11,6 @@ const Header = () => {
   // Sample data structure for suggestions
   const suggestionData = {
     'Payroll': {
-      
       items: [
         { name: 'Overtime for Payroll', category: 'Payroll', image: null },
         { name: 'Import - Export Payrolls', category: 'Payroll', image: null },
@@ -20,7 +18,6 @@ const Header = () => {
       ]
     },
     'Documents': {
-      
       items: [
         { name: 'Downloading Payslips', category: 'Documents', image: 'https://icehrm.com/explore/wp-content/uploads/2022/08/Screenshot-from-2022-08-01-10-06-24-1-1024x271.png' },
         { name: 'Employee Handbook', category: 'Documents', image: 'https://icehrm.com/explore/wp-content/uploads/2022/08/Screenshot-from-2022-08-01-10-06-24-1-1024x271.png' },
@@ -28,7 +25,6 @@ const Header = () => {
       ]
     },
     'Projects': {
-      
       items: [
         { name: 'Project Alpha', category: 'Projects', image: 'https://icehrm.com/explore/wp-content/uploads/2022/08/Screenshot-from-2022-08-01-10-06-24-1-1024x271.png' },
         { name: 'Client Management', category: 'Projects', image: null },
@@ -68,10 +64,6 @@ const Header = () => {
 
   const filteredSuggestions = getFilteredSuggestions();
   const allSuggestions = Object.values(filteredSuggestions).flatMap(cat => cat.items);
-
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-  };
 
   const handleSearch = (e) => {
     e.preventDefault();

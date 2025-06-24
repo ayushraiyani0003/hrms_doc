@@ -6,19 +6,12 @@ import {
   HelpCircle, 
   ChevronDown, 
   ChevronRight,
-  Play,
-  FileText,
-  Settings,
-  Layers,
-  Link,
-  Database,
-  Globe,
-  MessageCircle,
-  LifeBuoy
+  Sun,
+  Moon
 } from 'lucide-react';
 
-const Sidebar = () => {
-  const [activeSection, setActiveSection] = useState('');
+const Sidebar = ({ isDarkMode , menuItems }) => {
+  const [setActiveSection] = useState('');
   const [activePage, setActivePage] = useState('introduction');
   const [expandedSections, setExpandedSections] = useState({
     'getting-started': true,
@@ -27,46 +20,6 @@ const Sidebar = () => {
     'help': false
   });
 
-  const menuItems = [
-    {
-      id: 'getting-started',
-      title: 'Getting Started',
-      icon: Home,
-      items: [
-        { id: 'introduction', title: 'Introduction' },
-        { id: 'whats-new', title: "What's new?" }
-      ]
-    },
-    {
-      id: 'installation',
-      title: 'Installation',
-      icon: Download,
-      items: [
-        { id: 'editor-setup', title: 'Editor Setup' },
-        { id: 'start-project', title: 'Start a new Project' }
-      ]
-    },
-    {
-      id: 'api-reference',
-      title: 'API Reference',
-      icon: Code,
-      items: [
-        { id: 'components', title: 'Components' },
-        { id: 'connectors', title: 'Connectors' },
-        { id: 'information-architecture', title: 'Information architecture' },
-        { id: 'internationalization', title: 'Internationalization' }
-      ]
-    },
-    {
-      id: 'help',
-      title: 'Help',
-      icon: HelpCircle,
-      items: [
-        { id: 'faq', title: 'FAQ' },
-        { id: 'support', title: 'Support' }
-      ]
-    }
-  ];
 
   const toggleSection = (sectionId) => {
     setExpandedSections(prev => ({
@@ -78,7 +31,6 @@ const Sidebar = () => {
   const handleItemClick = (pageId, sectionId) => {
     setActivePage(pageId);
     setActiveSection(sectionId);
-    // Here you would typically handle routing
     console.log(`Navigating to: ${pageId}`);
   };
 
@@ -130,12 +82,22 @@ const Sidebar = () => {
     
     return (
       <div className="p-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">{current.title}</h1>
-        <div className="text-gray-600 leading-relaxed">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+            {current.title}
+          </h1>
+          {/* Dark Mode Toggle in Content Area, Main reader part*/}
+        </div>
+        <div className={`leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
           <p>{current.content}</p>
-          <div className="mt-8 p-6 bg-blue-50 rounded-lg border-l-4 border-blue-500">
-            <p className="text-sm text-blue-700">
+          <div className={`mt-8 p-6 rounded-lg border-l-4 ${
+            isDarkMode 
+              ? 'bg-gray-500/30 border-gray-400 text-blue-300'
+              : 'bg-blue-50 border-blue-500 text-blue-700'
+          }`}>
+            <p className="text-sm">
               This is a dynamic content area. The content changes based on your sidebar selection without page reload.
+              Dark mode is now synchronized across Header and Sidebar components using props!
             </p>
           </div>
         </div>
@@ -144,11 +106,26 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className={`flex h-screen transition-colors duration-300 ${
+      isDarkMode ? 'bg-gray-900' : 'bg-gray-50'
+    }`}>
       {/* Sidebar */}
-      <div className="w-80 bg-white border-r border-gray-200 shadow-lg">
-        <div className="p-6 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-800">Documentation</h2>
+      <div className={`w-80 shadow-lg transition-colors duration-300 ${
+        isDarkMode 
+          ? 'bg-gray-800 border-r border-gray-700' 
+          : 'bg-white border-r border-gray-200'
+      }`}>
+        <div className={`p-6 border-b transition-colors duration-300 ${
+          isDarkMode ? 'border-gray-700' : 'border-gray-200'
+        }`}>
+          <div className="flex items-center justify-between">
+            <h2 className={`text-xl font-semibold ${
+              isDarkMode ? 'text-white' : 'text-gray-800'
+            }`}>
+              Documentation
+            </h2>
+            {/* Dark Mode Toggle in Sidebar Header */}
+          </div>
         </div>
         
         <nav className="p-4">
@@ -160,16 +137,20 @@ const Sidebar = () => {
               <div key={section.id} className="mb-2">
                 <button
                   onClick={() => toggleSection(section.id)}
-                  className="w-full flex items-center justify-between p-3 text-left rounded-lg hover:bg-gray-100 transition-colors duration-200"
+                  className={`w-full flex items-center justify-between p-3 text-left rounded-lg transition-colors duration-200 ${
+                    isDarkMode
+                      ? 'hover:bg-gray-700 text-gray-200'
+                      : 'hover:bg-gray-100 text-gray-700'
+                  }`}
                 >
                   <div className="flex items-center space-x-3">
-                    <IconComponent size={20} className="text-gray-600" />
-                    <span className="font-medium text-gray-700">{section.title}</span>
+                    <IconComponent size={20} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
+                    <span className="font-medium">{section.title}</span>
                   </div>
                   {isExpanded ? (
-                    <ChevronDown size={16} className="text-gray-400" />
+                    <ChevronDown size={16} className={isDarkMode ? 'text-gray-500' : 'text-gray-400'} />
                   ) : (
-                    <ChevronRight size={16} className="text-gray-400" />
+                    <ChevronRight size={16} className={isDarkMode ? 'text-gray-500' : 'text-gray-400'} />
                   )}
                 </button>
                 
@@ -181,7 +162,11 @@ const Sidebar = () => {
                         onClick={() => handleItemClick(item.id, section.id)}
                         className={`w-full text-left p-2 pl-6 rounded-md text-sm transition-colors duration-200 ${
                           activePage === item.id
-                            ? 'bg-blue-100 text-blue-700 border-r-3 border-blue-500'
+                            ? isDarkMode
+                              ? 'bg-gray-500/30 border-gray-400 text-blue-300 border-r-3'
+                              : 'bg-blue-100 text-blue-700 border-r-3 border-blue-500'
+                            : isDarkMode
+                            ? 'text-gray-300 hover:bg-gray-700 hover:text-white'
                             : 'text-gray-600 hover:bg-gray-50 hover:text-gray-800'
                         }`}
                       >
@@ -197,7 +182,9 @@ const Sidebar = () => {
       </div>
       
       {/* Main Content */}
-      <div className="flex-1 overflow-auto">
+      <div className={`flex-1 overflow-auto transition-colors duration-300 ${
+        isDarkMode ? 'bg-gray-900' : 'bg-gray-50'
+      }`}>
         {renderContent()}
       </div>
     </div>
