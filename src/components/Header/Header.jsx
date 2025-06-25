@@ -142,7 +142,7 @@ const Header = ({ isDarkMode, toggleDarkMode }) => {
       <div className="mx-5 flex items-center justify-between">
         {/* Site Logo */}
         <img
-          className={`h-[35px] transition ${
+          className={`h-[40px] transition ${
             isDarkMode ? 'filter invert brightness-0' : ''
           }`}
           src="https://sunchaser.in/images/logo.png"
@@ -285,7 +285,7 @@ const Header = ({ isDarkMode, toggleDarkMode }) => {
           {/* Company Site Button */}
           <button
             onClick={navigateToCompany}
-            className="px-4 py-2 bg-orange-400 text-[13px] text-white font-semibold rounded-full hover:bg-orange-500 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl cursor-pointer"
+            className=" px-5 py-2 bg-orange-400 text-[15px] text-white font-semibold rounded-full hover:bg-orange-500 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl cursor-pointer"
           >
             Visit Site
           </button>
