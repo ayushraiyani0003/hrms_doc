@@ -114,14 +114,13 @@ const Layout = () => {
           <h1 className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
             {current.title}
           </h1>
-          {/* Print Button */}
         </div>
         <div className={`leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
           <p>{current.content}</p>
-          <div className={`mt-8 p-6 rounded-lg border-l-4 ${
+          <div className={`mt-8 p-6 rounded-lg border-l-4 transition-colors duration-400 ${
             isDarkMode 
               ? 'bg-gray-500/30 border-gray-400 text-blue-300'
-              : 'bg-blue-50 border-blue-500 text-blue-700'
+              : 'bg-blue-50 border-blue-500 text-blue-700' 
           }`}>
             <p className="text-sm">
               This is a dynamic content area. The content changes based on your sidebar selection without page reload.

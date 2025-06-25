@@ -36,16 +36,16 @@ const Sidebar = ({ isDarkMode , menuItems, activePage, setActivePage }) => {
   
 
   return (
-    <div className={`flex h-screen transition-colors duration-300 w-fit ${
+    <div className={`flex h-screen transition-colors duration-400 w-fit ${
       isDarkMode ? 'bg-gray-800' : 'bg-gray-50'
     }`}>
       {/* Sidebar */}
-      <div className={`w-80 shadow-lg transition-colors duration-300 ${
+      <div className={`w-80 shadow-lg transition-colors duration-400 ${
         isDarkMode 
           ? 'bg-gray-800 border-r border-gray-700' 
           : 'bg-white border-r border-gray-200'
       }`}>
-        <div className={`p-6 border-b transition-colors duration-300 ${
+        <div className={`p-6 border-b transition-colors duration-400 ${
           isDarkMode ? 'border-gray-700' : 'border-gray-200'
         }`}>
           <div className="flex items-center justify-between">
@@ -64,10 +64,10 @@ const Sidebar = ({ isDarkMode , menuItems, activePage, setActivePage }) => {
             const isExpanded = expandedSections[section.id];
             
             return (
-              <div key={section.id} className="mb-2">
+              <div key={section.id} className="mb-0">
                 <button
                   onClick={() => toggleSection(section.id)}
-                  className={`w-full flex items-center justify-between p-3 text-left rounded-lg transition-colors duration-200 ${
+                  className={`w-full flex items-center justify-between p-3 text-left rounded-lg transition-colors duration-400 ${
                     isDarkMode
                       ? 'hover:bg-gray-700 text-gray-200'
                       : 'hover:bg-gray-100 text-gray-700'
@@ -90,7 +90,7 @@ const Sidebar = ({ isDarkMode , menuItems, activePage, setActivePage }) => {
                       <button
                         key={item.id}
                         onClick={() => handleItemClick(item.id, section.id)}
-                        className={`w-full text-left p-2 pl-6 rounded-md text-sm transition-colors duration-200 ${
+                        className={`w-full text-left p-2 pl-6 rounded-md text-sm transition-colors duration-400 ${
                           activePage === item.id
                             ? isDarkMode
                               ? 'bg-gray-500/30 border-gray-400 text-blue-300 border-r-3'
