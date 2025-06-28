@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Header from "../../components/Header/Header";
 import Sidebar from "../../components/SideBar/SideBar";
 import Main from "../../components/Main/Main";
@@ -26,6 +26,47 @@ import HRMSDoc from "../../utils/documentation_data";
 const Layout = () => {
   const [activePage, setActivePage] = useState("recruitment-setup-banklist");
   const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Create a ref for the main content area
+  const mainContentRef = useRef(null);
+
+  // Scroll to top whenever activePage changes
+  useEffect(() => {
+    const scrollToTop = () => {
+      // Method 1: Scroll the main content ref
+      if (mainContentRef.current) {
+        mainContentRef.current.scrollTo({
+          top: 0,
+          behavior: "auto", // Use instant scroll for better UX
+        });
+      }
+
+      // Method 2: Also try scrolling the window (fallback)
+      window.scrollTo({
+        top: 0,
+        behavior: "auto",
+      });
+
+      // Method 3: Find and scroll any element with overflow-y-auto class
+      const scrollableElements = document.querySelectorAll(".overflow-y-auto");
+      scrollableElements.forEach((element) => {
+        element.scrollTop = 0; // Direct assignment for instant scroll
+      });
+
+      // Method 4: Target the main content area specifically
+      const mainContent = document.querySelector("main .overflow-y-auto");
+      if (mainContent) {
+        mainContent.scrollTop = 0;
+      }
+    };
+
+    // Execute immediately without delay for instant response
+    scrollToTop();
+
+    // Also set a small timeout as fallback
+    const timer = setTimeout(scrollToTop, 10);
+    return () => clearTimeout(timer);
+  }, [activePage]);
 
   // Generate menu items dynamically from HRMSDoc
   const generateMenuItems = () => {
@@ -146,6 +187,7 @@ const Layout = () => {
 
         return (
           <div
+            key={index}
             className={`flex rounded-lg p-4 items-start space-x-4 transition-colors duration-400 ${
               isDarkMode
                 ? "bg-gray-500/30 border-gray-400 text-blue-300 border-r-4 border-blue-400"
@@ -186,8 +228,8 @@ const Layout = () => {
 
       case "divider":
         return (
-          // Simple horizontal divider
           <hr
+            key={index}
             className={`my-4 border-t ${
               isDarkMode ? "border-gray-700" : "border-gray-300"
             }`}
@@ -388,7 +430,11 @@ const Layout = () => {
           setActivePage={setActivePage}
         />
         <main className="flex-1 ml-80">
-          <Main isDarkMode={isDarkMode} renderContent={renderContent} />
+          <Main
+            isDarkMode={isDarkMode}
+            renderContent={renderContent}
+            ref={mainContentRef}
+          />
         </main>
       </div>
     </>
