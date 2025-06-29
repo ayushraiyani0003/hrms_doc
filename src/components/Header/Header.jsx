@@ -1,86 +1,100 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Search, Sun, Moon, ChevronRight } from "lucide-react";
 
-const Header = ({ isDarkMode, toggleDarkMode }) => {
+const Header = ({ isDarkMode, toggleDarkMode, menuItems, setActivePage }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const searchRef = useRef(null);
   const suggestionsRef = useRef(null);
 
-  // Sample data structure for suggestions
-  const suggestionData = {
-    Payroll: {
-      items: [
-        { name: "Overtime for Payroll", category: "Payroll", image: null },
-        { name: "Import - Export Payrolls", category: "Payroll", image: null },
-        { name: "Updated Payroll Example", category: "Payroll", image: null },
-      ],
-    },
-    Documents: {
-      items: [
-        {
-          name: "Downloading Payslips",
-          category: "Documents",
-          image:
-            "https://icehrm.com/explore/wp-content/uploads/2022/08/Screenshot-from-2022-08-01-10-06-24-1-1024x271.png",
-        },
-        {
-          name: "Employee Handbook",
-          category: "Documents",
-          image:
-            "https://icehrm.com/explore/wp-content/uploads/2022/08/Screenshot-from-2022-08-01-10-06-24-1-1024x271.png",
-        },
-        {
-          name: "Tax Documents",
-          category: "Documents",
-          image:
-            "https://icehrm.com/explore/wp-content/uploads/2022/08/Screenshot-from-2022-08-01-10-06-24-1-1024x271.png",
-        },
-      ],
-    },
-    Projects: {
-      items: [
-        {
-          name: "Project Alpha",
-          category: "Projects",
-          image:
-            "https://icehrm.com/explore/wp-content/uploads/2022/08/Screenshot-from-2022-08-01-10-06-24-1-1024x271.png",
-        },
-        { name: "Client Management", category: "Projects", image: null },
-        {
-          name: "Resource Planning",
-          category: "Projects",
-          image:
-            "https://icehrm.com/explore/wp-content/uploads/2022/08/Screenshot-from-2022-08-01-10-06-24-1-1024x271.png",
-        },
-      ],
-    },
-    Settings: {
-      items: [
-        { name: "User Preferences", category: "Settings", image: null },
-        {
-          name: "System Configuration",
-          category: "Settings",
-          image:
-            "https://icehrm.com/explore/wp-content/uploads/2022/08/Screenshot-from-2022-08-01-10-06-24-1-1024x271.png",
-        },
-        { name: "Security Settings", category: "Settings", image: null },
-      ],
-    },
+  // Generate search suggestions from menuItems with proper nested structure
+  const generateSuggestionData = () => {
+    if (!menuItems || menuItems.length === 0) return {};
+
+    const suggestionData = {};
+
+    menuItems.forEach((mainCategory) => {
+      const categoryItems = [];
+
+      mainCategory.items.forEach((subCategory) => {
+        if (subCategory.items && subCategory.items.length > 0) {
+          // Has sub-items (subSubCategory level)
+          subCategory.items.forEach((subSubItem) => {
+            categoryItems.push({
+              name: subSubItem.title,
+              category: `${mainCategory.title} → ${subCategory.title}`,
+              id: subSubItem.id,
+              image: null,
+              path: [mainCategory.title, subCategory.title, subSubItem.title],
+              searchTerms: [
+                subSubItem.title.toLowerCase(),
+                subCategory.title.toLowerCase(),
+                mainCategory.title.toLowerCase(),
+                // Add individual words for better matching
+                ...subSubItem.title.toLowerCase().split(/\s+/),
+                ...subCategory.title.toLowerCase().split(/\s+/),
+                ...mainCategory.title.toLowerCase().split(/\s+/),
+              ],
+            });
+          });
+        } else {
+          // Direct item without sub-items
+          categoryItems.push({
+            name: subCategory.title,
+            category: mainCategory.title,
+            id: subCategory.id,
+            image: null,
+            path: [mainCategory.title, subCategory.title],
+            searchTerms: [
+              subCategory.title.toLowerCase(),
+              mainCategory.title.toLowerCase(),
+              // Add individual words for better matching
+              ...subCategory.title.toLowerCase().split(/\s+/),
+              ...mainCategory.title.toLowerCase().split(/\s+/),
+            ],
+          });
+        }
+      });
+
+      if (categoryItems.length > 0) {
+        suggestionData[mainCategory.title] = {
+          items: categoryItems,
+        };
+      }
+    });
+
+    return suggestionData;
   };
 
-  // Filter suggestions based on search query
+  const suggestionData = generateSuggestionData();
+
+  // Improved filter function with better search logic
   const getFilteredSuggestions = () => {
     if (!searchQuery.trim()) return suggestionData;
 
+    const searchLower = searchQuery.toLowerCase().trim();
+    const searchWords = searchLower
+      .split(/\s+/)
+      .filter((word) => word.length > 0);
+
     const filtered = {};
+
     Object.keys(suggestionData).forEach((category) => {
-      const filteredItems = suggestionData[category].items.filter(
-        (item) =>
-          item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          category.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+      const filteredItems = suggestionData[category].items.filter((item) => {
+        // Check if any search word matches any of the item's search terms
+        return (
+          searchWords.some((searchWord) =>
+            item.searchTerms.some(
+              (term) => term.includes(searchWord) || searchWord.includes(term)
+            )
+          ) ||
+          // Also check for exact phrase matches
+          item.searchTerms.some((term) => term.includes(searchLower)) ||
+          // Check if the search query matches the beginning of any term
+          item.searchTerms.some((term) => term.startsWith(searchLower))
+        );
+      });
 
       if (filteredItems.length > 0) {
         filtered[category] = {
@@ -101,7 +115,10 @@ const Header = ({ isDarkMode, toggleDarkMode }) => {
   const handleSearch = (e) => {
     e.preventDefault();
     setShowSuggestions(false);
-    ///console.log('Searching for:', searchQuery);
+    // If there are suggestions and no specific selection, navigate to first result
+    if (allSuggestions.length > 0 && setActivePage) {
+      setActivePage(allSuggestions[0].id);
+    }
   };
 
   const handleInputChange = (e) => {
@@ -131,8 +148,7 @@ const Header = ({ isDarkMode, toggleDarkMode }) => {
       case "Enter":
         e.preventDefault();
         if (selectedIndex >= 0) {
-          setSearchQuery(allSuggestions[selectedIndex].name);
-          setShowSuggestions(false);
+          selectSuggestion(allSuggestions[selectedIndex]);
         } else {
           handleSearch(e);
         }
@@ -147,11 +163,13 @@ const Header = ({ isDarkMode, toggleDarkMode }) => {
   const selectSuggestion = (suggestion) => {
     setSearchQuery(suggestion.name);
     setShowSuggestions(false);
-    //console.log('Selected:', suggestion);
+    if (setActivePage) {
+      setActivePage(suggestion.id);
+    }
   };
 
   const navigateToCompany = () => {
-    window.open("https://sunchaser.in", "_blank");
+    window.open("http://192.168.10.132:3001/", "_blank");
   };
 
   // Close suggestions when clicking outside
@@ -200,7 +218,7 @@ const Header = ({ isDarkMode, toggleDarkMode }) => {
                 onChange={handleInputChange}
                 onFocus={handleInputFocus}
                 onKeyDown={handleKeyDown}
-                placeholder="Search projects, services..."
+                placeholder="Search documentation, topics..."
                 className={`w-full py-1 px-5 pr-12 rounded-full focus:outline-none transition-colors duration-400 ${
                   isDarkMode
                     ? "bg-gray-700 text-white placeholder-gray-400"

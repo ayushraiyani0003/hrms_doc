@@ -155,6 +155,7 @@ const Layout = () => {
           </div>
         );
 
+      // Updated image case in renderContentItem function
       case "image":
         return (
           <div key={index} className="mb-4">
@@ -163,7 +164,16 @@ const Layout = () => {
                 <img
                   src={item.data}
                   alt="Item"
-                  className="h-auto max-h-[500px] w-auto object-contain rounded-md"
+                  className={`h-auto max-h-[500px] w-auto object-contain rounded-md transition-all duration-300 ${
+                    isDarkMode
+                      ? "filter brightness-80 contrast-110 saturate-80"
+                      : ""
+                  }`}
+                  style={{
+                    ...(isDarkMode && {
+                      filter: "brightness(0.9) contrast(1.1) saturate(0.9)",
+                    }),
+                  }}
                 />
               ) : (
                 <span
@@ -420,7 +430,12 @@ const Layout = () => {
 
   return (
     <>
-      <Header isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
+      <Header
+        isDarkMode={isDarkMode}
+        toggleDarkMode={toggleDarkMode}
+        menuItems={menuItems}
+        setActivePage={setActivePage}
+      />
       <div className="flex">
         {/* Sidebar renders fixed, not inline here */}
         <Sidebar
