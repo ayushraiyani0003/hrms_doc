@@ -430,6 +430,51 @@ const Layout = () => {
 
   return (
     <>
+      {/* Add dynamic styles for scrollbar */}
+      <style jsx global>{`
+        /* Custom scrollbar styles for dark mode */
+        .${isDarkMode ? "dark-scrollbar" : "light-scrollbar"} {
+          scrollbar-width: thin;
+          scrollbar-color: ${isDarkMode
+            ? "#4B5563 #1F2937"
+            : "#D1D5DB #F9FAFB"};
+        }
+
+        .${isDarkMode
+            ? "dark-scrollbar"
+            : "light-scrollbar"}::-webkit-scrollbar {
+          width: 8px;
+          height: 8px;
+        }
+
+        .${isDarkMode
+            ? "dark-scrollbar"
+            : "light-scrollbar"}::-webkit-scrollbar-track {
+          background: ${isDarkMode ? "#1F2937" : "#F9FAFB"};
+          border-radius: 4px;
+        }
+
+        .${isDarkMode
+            ? "dark-scrollbar"
+            : "light-scrollbar"}::-webkit-scrollbar-thumb {
+          background: ${isDarkMode ? "#4B5563" : "#D1D5DB"};
+          border-radius: 4px;
+          border: 1px solid ${isDarkMode ? "#374151" : "#E5E7EB"};
+        }
+
+        .${isDarkMode
+            ? "dark-scrollbar"
+            : "light-scrollbar"}::-webkit-scrollbar-thumb:hover {
+          background: ${isDarkMode ? "#6B7280" : "#9CA3AF"};
+        }
+
+        .${isDarkMode
+            ? "dark-scrollbar"
+            : "light-scrollbar"}::-webkit-scrollbar-corner {
+          background: ${isDarkMode ? "#1F2937" : "#F9FAFB"};
+        }
+      `}</style>
+
       <Header
         isDarkMode={isDarkMode}
         toggleDarkMode={toggleDarkMode}
@@ -444,7 +489,11 @@ const Layout = () => {
           activePage={activePage}
           setActivePage={setActivePage}
         />
-        <main className="flex-1 ml-80">
+        <main
+          className={`flex-1 ml-80 ${
+            isDarkMode ? "dark-scrollbar" : "light-scrollbar"
+          }`}
+        >
           <Main
             isDarkMode={isDarkMode}
             renderContent={renderContent}

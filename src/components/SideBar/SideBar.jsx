@@ -159,95 +159,141 @@ const Sidebar = ({ isDarkMode, menuItems, activePage, setActivePage }) => {
   };
 
   return (
-    <div
-      className={`fixed left-0 top-[64px] h-[calc(100vh-64px)] w-80 shadow-lg z-40 transition-colors duration-400 ${
-        isDarkMode ? "bg-gray-800" : "bg-gray-50"
-      }`}
-    >
-      {/* Sidebar */}
+    <>
+      {/* Add dynamic styles for sidebar scrollbar */}
+      <style jsx>{`
+        /* Custom scrollbar styles for sidebar */
+        .sidebar-scroll-${isDarkMode ? "dark" : "light"} {
+          scrollbar-width: thin;
+          scrollbar-color: ${isDarkMode
+            ? "#4B5563 #1F2937"
+            : "#D1D5DB #F9FAFB"};
+        }
+
+        .sidebar-scroll-${isDarkMode ? "dark" : "light"}::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        .sidebar-scroll-${isDarkMode
+            ? "dark"
+            : "light"}::-webkit-scrollbar-track {
+          background: ${isDarkMode ? "#1F2937" : "#F9FAFB"};
+          border-radius: 3px;
+        }
+
+        .sidebar-scroll-${isDarkMode
+            ? "dark"
+            : "light"}::-webkit-scrollbar-thumb {
+          background: ${isDarkMode ? "#4B5563" : "#D1D5DB"};
+          border-radius: 3px;
+          border: 1px solid ${isDarkMode ? "#374151" : "#E5E7EB"};
+        }
+
+        .sidebar-scroll-${isDarkMode
+            ? "dark"
+            : "light"}::-webkit-scrollbar-thumb:hover {
+          background: ${isDarkMode ? "#6B7280" : "#9CA3AF"};
+        }
+      `}</style>
+
       <div
         className={`fixed left-0 top-[64px] h-[calc(100vh-64px)] w-80 shadow-lg z-40 transition-colors duration-400 ${
-          isDarkMode
-            ? "bg-gray-800 border-r border-gray-700"
-            : "bg-white border-r border-gray-200"
+          isDarkMode ? "bg-gray-800" : "bg-gray-50"
         }`}
       >
-        <nav className="p-4 pb-8 overflow-y-auto h-full">
-          {menuItems.map((section) => {
-            const IconComponent = section.icon;
-            //const isExpanded = expandedSections[section.id];
+        {/* Sidebar */}
+        <div
+          className={`fixed left-0 top-[64px] h-[calc(100vh-64px)] w-80 shadow-lg z-40 transition-colors duration-400 ${
+            isDarkMode
+              ? "bg-gray-800 border-r border-gray-700"
+              : "bg-white border-r border-gray-200"
+          }`}
+        >
+          <nav
+            className={`p-4 pb-8 overflow-y-auto h-full sidebar-scroll-${
+              isDarkMode ? "dark" : "light"
+            }`}
+          >
+            {menuItems.map((section) => {
+              const IconComponent = section.icon;
+              //const isExpanded = expandedSections[section.id];
 
-            return (
-              <div
-                className={`fixed left-0 top-0 h-screen w-80 shadow-lg z-40 transition-colors duration-400 ${
-                  isDarkMode
-                    ? "bg-gray-800 border-r border-gray-700"
-                    : "bg-white border-r border-gray-200"
-                }`}
-              >
-                <nav className="p-4 pb-8 overflow-y-auto h-full">
-                  {menuItems.map((section) => {
-                    const IconComponent = section.icon;
-                    const isExpanded = expandedSections[section.id];
+              return (
+                <div
+                  className={`fixed left-0 top-0 h-screen w-80 shadow-lg z-40 transition-colors duration-400 ${
+                    isDarkMode
+                      ? "bg-gray-800 border-r border-gray-700"
+                      : "bg-white border-r border-gray-200"
+                  }`}
+                >
+                  <nav
+                    className={`p-4 pb-8 overflow-y-auto h-full sidebar-scroll-${
+                      isDarkMode ? "dark" : "light"
+                    }`}
+                  >
+                    {menuItems.map((section) => {
+                      const IconComponent = section.icon;
+                      const isExpanded = expandedSections[section.id];
 
-                    return (
-                      <div
-                        key={section.id}
-                        className="mb-2 relative top-[64px]"
-                      >
-                        <button
-                          onClick={() => toggleSection(section.id)}
-                          className={`w-full flex items-center justify-between p-3 text-left rounded-lg transition-colors duration-400 ${
-                            isDarkMode
-                              ? "hover:bg-gray-700 text-gray-200"
-                              : "hover:bg-gray-100 text-gray-700"
-                          }`}
+                      return (
+                        <div
+                          key={section.id}
+                          className="mb-2 relative top-[64px]"
                         >
-                          <div className="flex items-center space-x-3">
-                            <IconComponent
-                              size={20}
-                              className={
-                                isDarkMode ? "text-gray-400" : "text-gray-600"
-                              }
-                            />
-                            <span className="font-semibold">
-                              {section.title}
-                            </span>
-                          </div>
-                          {isExpanded ? (
-                            <ChevronDown
-                              size={16}
-                              className={
-                                isDarkMode ? "text-gray-500" : "text-gray-400"
-                              }
-                            />
-                          ) : (
-                            <ChevronRight
-                              size={16}
-                              className={
-                                isDarkMode ? "text-gray-500" : "text-gray-400"
-                              }
-                            />
-                          )}
-                        </button>
-
-                        {isExpanded && (
-                          <div className="ml-6 mt-2 space-y-1">
-                            {section.items.map((subSection) =>
-                              renderSubItems(subSection, section.id)
+                          <button
+                            onClick={() => toggleSection(section.id)}
+                            className={`w-full flex items-center justify-between p-3 text-left rounded-lg transition-colors duration-400 ${
+                              isDarkMode
+                                ? "hover:bg-gray-700 text-gray-200"
+                                : "hover:bg-gray-100 text-gray-700"
+                            }`}
+                          >
+                            <div className="flex items-center space-x-3">
+                              <IconComponent
+                                size={20}
+                                className={
+                                  isDarkMode ? "text-gray-400" : "text-gray-600"
+                                }
+                              />
+                              <span className="font-semibold">
+                                {section.title}
+                              </span>
+                            </div>
+                            {isExpanded ? (
+                              <ChevronDown
+                                size={16}
+                                className={
+                                  isDarkMode ? "text-gray-500" : "text-gray-400"
+                                }
+                              />
+                            ) : (
+                              <ChevronRight
+                                size={16}
+                                className={
+                                  isDarkMode ? "text-gray-500" : "text-gray-400"
+                                }
+                              />
                             )}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </nav>
-              </div>
-            );
-          })}
-        </nav>
+                          </button>
+
+                          {isExpanded && (
+                            <div className="ml-6 mt-2 space-y-1">
+                              {section.items.map((subSection) =>
+                                renderSubItems(subSection, section.id)
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </nav>
+                </div>
+              );
+            })}
+          </nav>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
