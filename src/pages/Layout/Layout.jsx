@@ -4,27 +4,19 @@ import Sidebar from "../../components/SideBar/SideBar";
 import Main from "../../components/Main/Main";
 import {
   Home,
-  Download,
-  Code,
-  HelpCircle,
-  ChevronDown,
-  ChevronRight,
-  Sun,
-  Moon,
   Users,
   UserCheck,
   Settings,
   Briefcase,
   FileText,
-  Image,
   Video,
   CheckSquare,
   FormInput,
 } from "lucide-react";
-import HRMSDoc from "../../utils/documentation_data";
+import HRCentralDoc from "../../documentation";
 
 const Layout = () => {
-  const [activePage, setActivePage] = useState("recruitment-setup-banklist");
+  const [activePage, setActivePage] = useState("self");
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   // Create a ref for the main content area
@@ -79,7 +71,7 @@ const Layout = () => {
       Performance: Users,
     };
 
-    return HRMSDoc.map((mainCategory) => ({
+    return HRCentralDoc.map((mainCategory) => ({
       id: mainCategory.id,
       title: mainCategory.name,
       icon: iconMap[mainCategory.name] || Home,
@@ -109,7 +101,7 @@ const Layout = () => {
 
   // Find content based on activePage
   const findContentByPageId = (pageId) => {
-    for (const mainCategory of HRMSDoc) {
+    for (const mainCategory of HRCentralDoc) {
       for (const subCategory of mainCategory.subCategory) {
         for (const subSubCategory of subCategory.subSubCategory) {
           const expectedId = `${mainCategory.name

@@ -195,7 +195,7 @@ const Header = ({ isDarkMode, toggleDarkMode, menuItems, setActivePage }) => {
       <div className="mx-5 flex items-center justify-between">
         {/* Site Logo */}
         <img
-          className={`h-[40px] transition ${
+          className={`h-[30px] transition-transform duration-300 ease-in-out hover:scale-110 ${
             isDarkMode ? "filter invert brightness-0" : ""
           }`}
           src="https://sunchaser.in/images/logo.png"
